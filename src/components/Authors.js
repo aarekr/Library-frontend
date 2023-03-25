@@ -1,5 +1,7 @@
 const Authors = (props) => {
-    if (props.show) {
+    console.log("Authors.js authors:", props.authors)
+    if (!props.show) {
+      console.log("!props.show")
       return null
     }
     if (props.authors) {
