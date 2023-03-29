@@ -1,30 +1,21 @@
 import { useState } from "react"
-import { UPDATE_AUTHOR_BORN } from "./queries"
+import { useMutation } from "@apollo/client"
+import { EDIT_AUTHOR_YEAR } from "./queries"
 
-const Authors = (props) => {
-    console.log("Authors.js authors:", props.authors)
-    
-    const [ newName, changeName ] = useState('')
-    const [ newYear, changeYear ] = useState('')
-    const [ paivitaVuosi ] = useState(UPDATE_AUTHOR_BORN)
+const Authors = (props) => {    
+    const [ name, setName ] = useState('')
+    const [ born, setYear ] = useState(1000)
+    const [ changeYear ] = useMutation(EDIT_AUTHOR_YEAR)
 
     if (!props.show) { return null }
 
-    const updateAuthor = (event) => {
+    const submit = (event) => {
       event.preventDefault()
-      console.log("Päivitetään author:")
-      const updatedAuthor = {
-        name: newName,
-        born: Number(newYear),
-        bookCount: 0
-      }
-      console.log("--->", updatedAuthor)
-      paivitaVuosi({ variables: {newName, newYear}})
-      changeName('')
-      changeYear('')
+      const setBornTo = born
+      changeYear({ variables: { name, setBornTo } })
+      setName('')
+      setYear('')
     }
-    const handleNameChange = (event) => { changeName(event.target.value) }
-    const handleYearChange = (event) => { changeYear(event.target.value) }
 
     if (props.authors) {
       return (
@@ -48,10 +39,21 @@ const Authors = (props) => {
           </table>
 
           <h3>Set birthyear</h3>
-          <form onSubmit={updateAuthor}>
-            Name: <input value={newName} onChange={handleNameChange} /> <br />
-            Born: <input value={newYear} onChange={handleYearChange} /> <br />
+          <form onSubmit={submit}>
+            <div>
+              Name: <input value={name} onChange={({ target }) => setName(target.value)} />
+            </div>
+            <div>
+              Born: <input value={Number(born)} 
+                           onChange={({ target }) => setYear(Number(target.value))} />
+            </div>
             <button type="submit">update author</button>
+          </form>
+
+          <form>
+            <select onChange={({ target }) => setName(target.value)}>
+              {props.authors.map(a => <option key={a.name}>{a.name}</option>)}
+            </select>
           </form>
         </div>
       )

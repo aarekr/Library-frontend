@@ -31,11 +31,11 @@ export const FIND_AUTHOR = gql`
   }
 `
 
-export const UPDATE_AUTHOR_BORN = gql`
-  mutation editAuthor($name: String!, $born: Int!) {
+export const EDIT_AUTHOR_YEAR = gql`
+  mutation editAuthor($name: String!, $setBornTo: Int!) {
     editAuthor(
       name: $name,
-      born: $born
+      setBornTo: $setBornTo
     ) {
       name
       born

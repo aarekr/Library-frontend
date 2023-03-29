@@ -1,5 +1,4 @@
 const Books = (props) => {
-    console.log("Books.js books:", props.books)
     if (!props.show) {
       return null
     }
